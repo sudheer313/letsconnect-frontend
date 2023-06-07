@@ -13,6 +13,8 @@ import CreatePost from "./pages/CreatePost";
 import UserProfile from "./pages/UserProfile";
 import Search from "./pages/Search";
 import PostView from "./pages/PostView";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const httpLink = createHttpLink({
   uri: "https://letsconnect-backend.onrender.com/graphql",
@@ -57,6 +59,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </ApolloProvider>
+      <ToastContainer />
     </div>
   );
 }

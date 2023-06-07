@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../utils/mutations";
 import { saveToken } from "../utils/auth";
+import { toast } from "react-toastify";
 
 const initialValues = {
   username: "",
@@ -29,6 +30,7 @@ const Signup = () => {
       variables: { ...values },
     });
     console.log(data);
+    toast.success("User Registration sucessfull");
     saveToken(data.registerUser.token);
     onSubmitProps.resetForm();
     navigate("/");
@@ -37,10 +39,12 @@ const Signup = () => {
   if (loading) {
     console.log("Request lOading");
   }
-  if (error) {
-    console.log("error request");
-  }
-  
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [error]);
+
   return (
     <div className="text-center pt-4 flex flex-col items-center self-auto ">
       <h1 className="text-3xl pb-4 ">Namasthe</h1>

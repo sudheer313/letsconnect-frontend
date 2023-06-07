@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { loggedIn, logout } from "../utils/auth";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [toggleSearch, setToggleSearch] = useState(false);
@@ -18,6 +19,7 @@ const Navbar = () => {
   };
   const handleLogout = () => {
     logout();
+    toast.success("LogOut Successfull");
     navigate("/login");
   };
 
