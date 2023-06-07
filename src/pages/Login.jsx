@@ -83,7 +83,6 @@ const Login = () => {
             </button>
           </Form>
         </Formik>
-        <p className="pt-4">Copyright © 2022</p>
       </div>
     </div>
   );
