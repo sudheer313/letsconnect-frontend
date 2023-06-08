@@ -97,23 +97,33 @@ const ADD_POST = gql`
 `;
 
 const DELETE_POST = gql`
-mutation AddPost($postId: ID!) {
-  deletePost(postId: $postId) {
-    _id
-    authorId
-    title
-    description
-    likes
-    dislikes
-    likesCount
-    author {
+  mutation AddPost($postId: ID!) {
+    deletePost(postId: $postId) {
       _id
-      username
-      email
-      bio
+      authorId
+      title
+      description
+      likes
+      dislikes
+      likesCount
+      author {
+        _id
+        username
+        email
+        bio
+      }
     }
   }
-}
+`;
+
+const LOGIN_GOOGLE_USER = gql`
+  mutation googleLogin($username: String!, $email: String!) {
+    googleLogin(username: $username, email: $email) {
+      email
+      token
+      username
+    }
+  }
 `;
 
 export {
@@ -124,5 +134,6 @@ export {
   FOLLOW_USER,
   UNFOLLOW_USER,
   ADD_POST,
-  DELETE_POST
+  DELETE_POST,
+  LOGIN_GOOGLE_USER,
 };

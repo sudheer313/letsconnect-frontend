@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from "../utils/mutations";
+import { LOGIN_GOOGLE_USER, LOGIN_USER } from "../utils/mutations";
 import { saveToken } from "../utils/auth";
 import { toast } from "react-toastify";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleAuthProvider } from "../firebase";
 
 const initialValues = {
   email: "",
@@ -22,13 +24,15 @@ const validationSchema = Yup.object({
 const Login = () => {
   const navigate = useNavigate();
   const [login, { error, loading }] = useMutation(LOGIN_USER);
+  const [googleLogin, { error: googleAuthError, loading: googleAuthLoading }] =
+    useMutation(LOGIN_GOOGLE_USER);
 
   const onSubmit = async (values, onSubmitProps) => {
     const { data } = await login({
       variables: { ...values },
     });
     console.log(data);
-    toast.success("Login Successfull");
+    toast.success("Login Successful");
     saveToken(data.login.token);
     onSubmitProps.resetForm();
     navigate("/");
@@ -41,6 +45,23 @@ const Login = () => {
       toast.error(error.message);
     }
   }, [error]);
+
+  const handleGoogleAuth = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      const { data } = await googleLogin({
+        variables: {
+          username: result.user.displayName,
+          email: result.user.email,
+        },
+      });
+      toast.success("Login Successful");
+      saveToken(data.googleLogin.token);
+      navigate("/");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div>
@@ -65,7 +86,9 @@ const Login = () => {
               placeholder="Email *"
               className="border p-3 rounded-lg w-80"
             />
-            <ErrorMessage name="email" />
+            <ErrorMessage name="email">
+              {(errorMsg) => <div className="text-red-500">{errorMsg}</div>}
+            </ErrorMessage>
             <Field
               type="password"
               name="password"
@@ -73,16 +96,26 @@ const Login = () => {
               className="border p-3 rounded-lg w-80"
             />
             <ErrorMessage name="password">
-              {(errorMsg) => <div>{errorMsg}</div>}
+              {(errorMsg) => <div className="text-red-500">{errorMsg}</div>}
             </ErrorMessage>
             <button
               type="submit"
               className="border p-3 rounded-lg bg-blue-600 text-white w-80"
+              disabled={loading}
             >
-              LOGIN
+              {loading ? "LOADING..." : "LOGIN"}
             </button>
           </Form>
         </Formik>
+        <div>
+          <button
+            onClick={handleGoogleAuth}
+            className="border p-3 rounded-lg bg-blue-600 text-white w-80"
+            disabled={googleAuthLoading}
+          >
+            {googleAuthLoading ? "LOADING..." : "Sign-In with Google"}
+          </button>
+        </div>
       </div>
     </div>
   );
