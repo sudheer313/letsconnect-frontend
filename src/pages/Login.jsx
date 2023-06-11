@@ -51,6 +51,7 @@ const Login = () => {
       const result = await signInWithPopup(auth, googleAuthProvider);
       const { data } = await googleLogin({
         variables: {
+          uid: result.user.uid,
           username: result.user.displayName,
           email: result.user.email,
         },
