@@ -1,17 +1,16 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import dotenv from "dotenv";
 
-// Your web app's Firebase configuration
+dotenv.config();
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCiKSAmbjQG2Zb4OiciZSqHAlWq603VcU0",
-  authDomain: "lets-connect-59b3d.firebaseapp.com",
-  projectId: "lets-connect-59b3d",
-  storageBucket: "lets-connect-59b3d.appspot.com",
-  messagingSenderId: "859081930524",
-  appId: "1:859081930524:web:d2909c745c65a54e47acd9",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
 // Initialize Firebase

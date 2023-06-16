@@ -18,7 +18,8 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 
 const httpLink = createHttpLink({
-  uri: "https://letsconnect-backend.onrender.com/graphql",
+  // uri: "https://letsconnect-backend.onrender.com/graphql",
+  uri: "http://localhost:5000/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -59,7 +60,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
-        <Footer/>
+        <Footer />
       </ApolloProvider>
       <ToastContainer />
     </div>
