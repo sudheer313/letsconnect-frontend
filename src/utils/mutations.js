@@ -133,6 +133,16 @@ const CREATE_CHECKOUT_SESSION = gql`
     }
   }
 `;
+const LIKE_POST = gql`
+  mutation LikePost($postId: ID!) {
+    likePost(postId: $postId) {
+      _id
+      likes
+      dislikes
+      likesCount
+    }
+  }
+`;
 
 export {
   ADD_USER,
@@ -145,4 +155,5 @@ export {
   DELETE_POST,
   LOGIN_GOOGLE_USER,
   CREATE_CHECKOUT_SESSION,
+  LIKE_POST,
 };

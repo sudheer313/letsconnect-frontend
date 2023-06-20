@@ -5,10 +5,14 @@ import { AiOutlineComment } from "react-icons/ai";
 import { AiOutlineDelete } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { getProfile, loggedIn } from "../utils/auth";
-import { DELETE_POST } from "../utils/mutations";
+import { DELETE_POST, LIKE_POST } from "../utils/mutations";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Post = ({ post }) => {
   const [deletePost, { error, loading }] = useMutation(DELETE_POST);
+  const [likePost, { loading: likePostLoading, error: likePostError }] =
+    useMutation(LIKE_POST);
   const navigate = useNavigate();
   const [decodedUserInfo, setDecodedUserInfo] = useState({});
 
@@ -25,6 +29,20 @@ const Post = ({ post }) => {
       console.log("error request");
     }
   };
+
+  const handleLikePost = async () => {
+    if (post?.authorId === decodedUserInfo?._id) {
+      toast.error("You can't like your own post.");
+      return;
+    }
+
+    try {
+      await likePost({ variables: { postId: post._id } });
+    } catch (err) {
+      console.error("Error occurred while liking the post:", err);
+    }
+  };
+
   useEffect(() => {
     if (loggedIn()) {
       const { data } = getProfile();
@@ -37,8 +55,13 @@ const Post = ({ post }) => {
       <div className="flex flex-row border my-4 cursor-pointer">
         <div className="basis-1/12 bg-slate-200 p-2">
           <div className="flex flex-col gap-20">
-            <div className="flex flex-col items-center gap-2">
-              <AiOutlineHeart className="text-2xl" />
+            <div
+              className="flex flex-col items-center gap-2"
+              onClick={handleLikePost}
+            >
+              <AiOutlineHeart
+                className={`text-2xl ${likePostLoading ? "text-gray-400" : ""}`}
+              />
               <span>{post?.likes?.length}</span>
             </div>
             <div className="flex flex-col items-center gap-2">
