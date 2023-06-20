@@ -8,6 +8,8 @@ import { saveToken } from "../utils/auth";
 import { toast } from "react-toastify";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleAuthProvider } from "../firebase";
+import { useDispatch } from "react-redux";
+import { loginError, loginStart, loginSuccess } from "../redux/userSlice";
 
 const initialValues = {
   email: "",
@@ -22,32 +24,42 @@ const validationSchema = Yup.object({
 });
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [login, { error, loading }] = useMutation(LOGIN_USER);
   const [googleLogin, { error: googleAuthError, loading: googleAuthLoading }] =
     useMutation(LOGIN_GOOGLE_USER);
 
   const onSubmit = async (values, onSubmitProps) => {
-    const { data } = await login({
-      variables: { ...values },
-    });
-    console.log(data);
-    toast.success("Login Successful");
-    saveToken(data.login.token);
-    onSubmitProps.resetForm();
-    navigate("/");
+    try {
+      dispatch(loginStart());
+      const { data } = await login({
+        variables: { ...values },
+      });
+      console.log(data);
+      toast.success("Login Successful");
+      dispatch(loginSuccess(data.login));
+      saveToken(data.login.token);
+      onSubmitProps.resetForm();
+      navigate("/");
+    } catch (error) {
+      dispatch(loginError());
+      console.log(error);
+      toast.error(error.message);
+    }
   };
   if (loading) {
     console.log("Request loading");
   }
-  useEffect(() => {
-    if (error) {
-      toast.error(error.message);
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     toast.error(error.message);
+  //   }
+  // }, [error]);
 
   const handleGoogleAuth = async () => {
     try {
+      dispatch(loginStart());
       const result = await signInWithPopup(auth, googleAuthProvider);
       const { data } = await googleLogin({
         variables: {
@@ -56,10 +68,13 @@ const Login = () => {
           email: result.user.email,
         },
       });
+      dispatch(loginSuccess(data.googleLogin));
       toast.success("Login Successful");
       saveToken(data.googleLogin.token);
+      console.log(data.googleLogin.token);
       navigate("/");
     } catch (error) {
+      dispatch(loginError());
       toast.error(error.message);
     }
   };

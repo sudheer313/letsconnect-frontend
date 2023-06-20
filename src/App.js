@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -18,8 +19,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
 
 const httpLink = createHttpLink({
-  // uri: "https://letsconnect-backend.onrender.com/graphql",
-  uri: "http://localhost:5000/graphql",
+  uri:
+    process.env.REACT_APP_ENV === "development"
+      ? "http://localhost:5000/graphql"
+      : "https://letsconnect-backend.onrender.com/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -55,12 +58,11 @@ function App() {
             <Route path="/users">
               <Route path=":userId" element={<UserProfile />} />
             </Route>
-            <Route>
-              <Route path="/search" element={<Search />} />
-            </Route>
+            <Route path="/search" element={<Search />} />
+            {/* <Route path="/donate" element={<Donate />} /> //Add the Donate route */}
           </Routes>
+          <Footer />
         </BrowserRouter>
-        <Footer />
       </ApolloProvider>
       <ToastContainer />
     </div>

@@ -3,11 +3,15 @@ import { HiOutlineSearch } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { loggedIn, logout } from "../utils/auth";
 import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../redux/userSlice";
 
 const Navbar = () => {
   const [toggleSearch, setToggleSearch] = useState(false);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const { loggedInUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -17,8 +21,10 @@ const Navbar = () => {
     e.preventDefault();
     navigate("/search?" + new URLSearchParams({ search }));
   };
+
   const handleLogout = () => {
     logout();
+    dispatch(logoutUser());
     toast.success("LogOut Successfull");
     navigate("/login");
   };
@@ -53,6 +59,7 @@ const Navbar = () => {
           />
           {loggedIn() ? (
             <>
+              <div className="cursor-pointer">{loggedInUser?.username} </div>
               <div className="cursor-pointer" onClick={handleLogout}>
                 {" "}
                 LOGOUT{" "}

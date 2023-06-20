@@ -60,8 +60,8 @@ const QUERY_RANDOMUSERS = gql`
 `;
 
 const QUERY_POSTBYSEARCH = gql`
-  query GetPostBysearch($searchQuery: String!) {
-    getPostBysearch(searchQuery: $searchQuery) {
+  query GetPostBySearch($searchQuery: String!) {
+    getPostBySearch(searchQuery: $searchQuery) {
       _id
       authorId
       title
@@ -82,6 +82,7 @@ const QUERY_POSTBYSEARCH = gql`
     }
   }
 `;
+
 const QUERY_POSTBYUSER = gql`
   query GetPostsByUser($userId: ID!) {
     getPostsByUser(userId: $userId) {

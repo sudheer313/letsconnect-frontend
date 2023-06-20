@@ -126,6 +126,14 @@ const LOGIN_GOOGLE_USER = gql`
   }
 `;
 
+const CREATE_CHECKOUT_SESSION = gql`
+  mutation createCheckoutSession($email: String!) {
+    createCheckoutSession(email: $email) {
+      sessionID
+    }
+  }
+`;
+
 export {
   ADD_USER,
   LOGIN_USER,
@@ -136,4 +144,5 @@ export {
   ADD_POST,
   DELETE_POST,
   LOGIN_GOOGLE_USER,
+  CREATE_CHECKOUT_SESSION,
 };

@@ -10,7 +10,7 @@ const PostsBySearch = ({ searchQuery }) => {
     fetchPolicy: "no-cache",
   });
 
-  const postsBySearch = data?.getPostBysearch || [];
+  const postsBySearch = data?.getPostBySearch || [];
 
   if (error) {
     console.log("error request", error);
@@ -27,7 +27,7 @@ const PostsBySearch = ({ searchQuery }) => {
         <>
           {postsBySearch.map((post) => (
             <Link to={`/posts/${post?._id}`} key={post._id}>
-              <Post  post={post} />
+              <Post post={post} />
             </Link>
           ))}
         </>
