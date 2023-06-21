@@ -44,18 +44,15 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       dispatch(loginError());
-      console.log(error);
+      // console.log(error);
       toast.error(error.message);
     }
   };
-  if (loading) {
-    console.log("Request loading");
-  }
-  // useEffect(() => {
-  //   if (error) {
-  //     toast.error(error.message);
-  //   }
-  // }, [error]);
+
+  // Commented out the token log statement
+  // if (loading) {
+  //   console.log("Request loading");
+  // }
 
   const handleGoogleAuth = async () => {
     try {
