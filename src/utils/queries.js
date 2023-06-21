@@ -129,7 +129,46 @@ const QUERY_SINGLEPOST = gql`
     }
   }
 `;
-
+const GET_POST = gql`
+  query Post($id: ID!) {
+    post(id: $id) {
+      _id
+      authorId
+      title
+      description
+      likes
+      dislikes
+      likesCount
+      commentsCount
+      author {
+        _id
+        username
+      }
+      comments {
+        _id
+        authorId
+        postId
+        description
+        author {
+          _id
+          username
+        }
+      }
+    }
+  }
+`;
+const GET_COMMENTS = gql`
+  query GetComments($postId: ID!) {
+    comments(postId: $postId) {
+      _id
+      description
+      author {
+        _id
+        username
+      }
+    }
+  }
+`;
 export {
   QUERY_ALLPOSTS,
   QUERY_ALLTRENDINGPOSTS,
@@ -138,4 +177,6 @@ export {
   QUERY_POSTBYSEARCH,
   QUERY_POSTBYUSER,
   QUERY_SINGLEPOST,
+  GET_POST,
+  GET_COMMENTS,
 };

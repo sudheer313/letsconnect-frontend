@@ -36,7 +36,7 @@ const Login = () => {
       const { data } = await login({
         variables: { ...values },
       });
-      console.log(data);
+
       toast.success("Login Successful");
       dispatch(loginSuccess(data.login));
       saveToken(data.login.token);
@@ -71,7 +71,7 @@ const Login = () => {
       dispatch(loginSuccess(data.googleLogin));
       toast.success("Login Successful");
       saveToken(data.googleLogin.token);
-      console.log(data.googleLogin.token);
+
       navigate("/");
     } catch (error) {
       dispatch(loginError());

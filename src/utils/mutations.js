@@ -28,9 +28,9 @@ const ADD_COMMENT = gql`
   mutation AddComment($postId: ID!, $description: String!) {
     addComment(postId: $postId, description: $description) {
       _id
+      description
       authorId
       postId
-      description
     }
   }
 `;

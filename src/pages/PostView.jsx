@@ -2,11 +2,13 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import { MdAdd } from "react-icons/md";
 import TrendingPostList from "../components/TrendingPostList";
-
 import { Link, useLocation } from "react-router-dom";
 import Post from "../components/Post";
-import { useQuery } from "@apollo/client";
+import CommentForm from "../components/CommentForm";
+import Comments from "../components/Comments"; // Import the Comments component
+import { useQuery, useMutation } from "@apollo/client";
 import { QUERY_SINGLEPOST } from "../utils/queries";
+import { ADD_COMMENT } from "../utils/mutations";
 
 const PostView = () => {
   const location = useLocation();
@@ -14,7 +16,16 @@ const PostView = () => {
 
   const { loading, error, data } = useQuery(QUERY_SINGLEPOST, {
     variables: { postId },
-    fetchPolicy: "nocache",
+    fetchPolicy: "cache-and-network",
+  });
+
+  const [addComment] = useMutation(ADD_COMMENT, {
+    refetchQueries: [
+      {
+        query: QUERY_SINGLEPOST,
+        variables: { postId },
+      },
+    ],
   });
 
   if (loading) {
@@ -24,6 +35,16 @@ const PostView = () => {
     console.log("error request");
   }
   const postInfo = data?.getPost || {};
+
+  const handleAddComment = async (description) => {
+    try {
+      await addComment({
+        variables: { postId, description },
+      });
+    } catch (err) {
+      console.error("Error occurred while adding the comment:", err);
+    }
+  };
 
   return (
     <div className="md:container md:mx-auto md:px-40">
@@ -39,6 +60,8 @@ const PostView = () => {
             </Link>
           </div>
           <Post post={postInfo} />
+          <CommentForm handleAddComment={handleAddComment} />
+          <Comments postId={postId} /> {/* Render the Comments component */}
         </div>
         <TrendingPostList />
       </div>
